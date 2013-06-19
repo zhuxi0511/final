@@ -8,6 +8,7 @@ from lxml import etree
 
 def read_xml(file_name):
     sentences = []
+    tags = []
     tree = etree.parse(file_name)
 
     paras_tree = tree.xpath('//para')
@@ -15,8 +16,9 @@ def read_xml(file_name):
         for sentence_tree in sentences_tree:
             tag = sentence_tree.xpath('@tag')
             sentence = sentence_tree.xpath('word/@cont')
-            sentences.append([sentence, tag])
-    return sentences
+            sentences.append(sentence)
+            tags.append(tag)
+    return sentences, tags
 
 if __name__ == '__main__':
     root_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
