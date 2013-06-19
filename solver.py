@@ -7,10 +7,10 @@ from model.split_sentence import split
 from model.cluster import make_sentences_vectors, make_graph, page_rank
 from model.read_xml import read_xml
 
-def final(page_value, sentences):
-    data = zip(page_value, sentences)
-    data.sort(key=lambda x:x[0], reverse=True)
-    return '\n'.join(map(lambda s:''.join([t[0] for t in s]), map(lambda x:x[1], data))[:len(sentences)/5])
+def final(page_value, sentences, tags):
+    data = zip(sentences, page_value, tags)
+    data.sort(key=lambda x:x[1], reverse=True)
+    return '\n'.join(map(lambda s:''.join([t[0] for t in s]), map(lambda x:x[0], data))[:len(sentences)/5])
 
 def deal_one_page(file_name):
     sentences, tags = read_xml(file_name)
@@ -24,7 +24,7 @@ def deal_one_page(file_name):
         [1.0/3, 0, 0, 1.0/2], [1.0/3, 1.0/2, 0, 0], 
         [1.0/3, 0, 1, 0]], [1.0/4] * 4)
         """
-    print final(page_value, sentences)
+    print final(page_value, sentences, tags)
 
 if __name__ == "__main__":
     reload(sys)

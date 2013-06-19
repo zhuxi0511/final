@@ -22,5 +22,5 @@ def read_xml(file_name):
 
 if __name__ == '__main__':
     root_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-    read_xml('%s/data/abs1.xml' % root_dir)
+    read_xml('%s/data/xml/abs1.xml' % root_dir)
 
