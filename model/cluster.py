@@ -37,7 +37,7 @@ def make_graph(sentences):
     for i, current_sentence in enumerate(sentences):
         out_row = []
         current_value_list = map(lambda x:x[1], current_sentence)
-        current_useful_term_limit = get_kth_min(current_value_list, p=0.2)
+        current_useful_term_limit = get_kth_min(current_value_list, p=0.0)
         current_sentence_length = len(current_sentence)
         current_sentence = [term for term in current_sentence 
                 if term[1] >= current_useful_term_limit]
