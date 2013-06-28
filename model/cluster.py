@@ -37,7 +37,7 @@ def make_graph(sentences):
     for i, current_sentence in enumerate(sentences):
         out_row = []
         current_value_list = map(lambda x:x[1], current_sentence)
-        current_useful_term_limit = get_kth_min(current_value_list, p=0.0)
+        current_useful_term_limit = get_kth_min(current_value_list, p=0.1)
         current_sentence_length = len(current_sentence)
         current_sentence = [term for term in current_sentence 
                 if term[1] >= current_useful_term_limit]
@@ -58,30 +58,16 @@ def make_graph(sentences):
         out_row = normalise(out_row, method='normal')
         graph.append(out_row)
     graph = np.array(graph)
-    count = 0
-    while count < len(graph):
-        if sum(graph[count]) > 1 - 0.01:
-            count += 1
-        else:
-            """
-            choose_list = [True] * len(graph) 
-            choose_list[count] = False
-            choose_list = np.array(choose_list)
-            graph = graph[choose_list]
-            graph = graph[:, choose_list]
-            sentences = sentences[:count] + sentences[count+1:]
-            """
-            graph[count] = 1.0/len(graph)
     return sentences, graph.T
 
-def page_rank(graph, page_value, iteration=100, threshold=1e-6):
+def page_rank(graph, page_value, iteration=100, threshold=1e-6, beta=0.1):
     graph = np.array(graph)
     page_value = np.array(page_value)
     new_page_value = np.zeros_like(page_value)
 
     for iter_time in range(iteration):
         print 'the %s iter' % (iter_time + 1), 
-        new_page_value = graph.dot(page_value)
+        new_page_value = graph.dot(page_value)*(1-beta) + np.array([beta]*len(graph))
         distance = euclidean_distance(new_page_value, page_value)
         print 'distance %s' % distance,
         print 'sum %s' % sum(new_page_value)

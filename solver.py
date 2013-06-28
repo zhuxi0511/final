@@ -42,7 +42,7 @@ def word_level_evaluate(sentences, page_value, tags, cut_level=10):
     f = 0
     if precient + recall > 0.0001:
         f = 2 * precient * recall /(precient + recall)
-    if f < 0.2:
+    if f < 0.0001:
         raise Exception
 
     """
