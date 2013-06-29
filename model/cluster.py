@@ -10,7 +10,7 @@ from consts import *
 
 from nltk.cluster import KMeansClusterer, euclidean_distance
 from tfidf import TF_IDF
-from util import normalise, get_kth_min
+from util import normalise, get_kth_min, yu_function
 from nltk.cluster import KMeansClusterer, euclidean_distance
 
 def make_sentences_vectors(sentences):
@@ -37,7 +37,7 @@ def make_graph(sentences):
     for i, current_sentence in enumerate(sentences):
         out_row = []
         current_value_list = map(lambda x:x[1], current_sentence)
-        current_useful_term_limit = get_kth_min(current_value_list, p=0.1)
+        current_useful_term_limit = get_kth_min(current_value_list, p=0.0)
         current_sentence_length = len(current_sentence)
         current_sentence = [term for term in current_sentence 
                 if term[1] >= current_useful_term_limit]
@@ -51,16 +51,15 @@ def make_graph(sentences):
                         if current_term[0] == term[0]:
                             same_term_count += 1
                             break
-                out_row.append(
-                        float(same_term_count) /
-                        ( current_sentence_length + len(sentence) )
-                )
+                yu_smiliar = yu_function(current_sentence, sentence)
+                word_match = float(same_term_count) / ( current_sentence_length + len(sentence) )
+                out_row.append(word_match + yu_smiliar)
         out_row = normalise(out_row, method='normal')
         graph.append(out_row)
     graph = np.array(graph)
     return sentences, graph.T
 
-def page_rank(graph, page_value, iteration=100, threshold=1e-6, beta=0.1):
+def page_rank(graph, page_value, iteration=100, threshold=1e-6, beta=0.2):
     graph = np.array(graph)
     page_value = np.array(page_value)
     new_page_value = np.zeros_like(page_value)
@@ -76,6 +75,4 @@ def page_rank(graph, page_value, iteration=100, threshold=1e-6, beta=0.1):
             break
         page_value = new_page_value
     return page_value
-
-
 
